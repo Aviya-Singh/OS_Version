@@ -1,0 +1,29 @@
+---
+- name: Check if the machine is reachable
+  hosts: linux
+  gather_facts: false
+  tasks:
+    - name: Fetch the IP of the remote node
+      shell: curl 169.254.169.254/latest/meta-data/local-ipv4/
+      register: result
+
+    - set_fact:
+        ip: "{{ item_a }}"
+      with_items: "{{ result.stdout }}"
+      loop_control:
+        loop_var: item_a
+ 
+    - name: Fetch the uname
+      shell: uname -a
+      register: name
+
+    - name: print
+      set_fact:
+        uname: "{{ item_l }}"
+      with_items: "{{name.stdout}}"
+      loop_control:
+        loop_var: item_l
+  
+    - shell: echo "{{ ip }} , {{ uname }}" >> /tmp/OS
+      delegate_to: localhost
+

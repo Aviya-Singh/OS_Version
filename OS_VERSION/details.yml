@@ -1,0 +1,6 @@
+---
+- name: Fetch the OS and Version details 
+  hosts: linux
+  connection: local
+  roles: 
+   - details

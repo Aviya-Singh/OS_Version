@@ -1,0 +1,30 @@
+- name: Fetch the IP of the remote node
+  shell: curl 169.254.169.254/latest/meta-data/local-ipv4/
+  register: result
+
+- set_fact:
+    ip: "{{ item_a }}"
+  with_items: "{{ result.stdout }}"
+  loop_control:
+    loop_var: item_a
+
+- set_fact:
+    name: "{{ item_b }}"
+  with_items: "{{ hostvars[inventory_hostname].ansible_distribution }}"
+  loop_control:
+    loop_var: item_b
+
+- set_fact:
+    major_version: "{{ item_c }}"
+  with_items: "{{ hostvars[inventory_hostname].ansible_distribution_major_version }}"
+  loop_control:
+    loop_var: item_c
+
+- set_fact:
+    version: "{{ item_e }}"
+  with_items: "{{ hostvars[inventory_hostname].ansible_distribution_version }}"
+  loop_control:
+    loop_var: item_e
+
+- shell: echo "{{ ip }} , {{ name }} , {{ major_version }} , {{ version }}" >> /tmp/OS.csv
+  delegate_to: localhost

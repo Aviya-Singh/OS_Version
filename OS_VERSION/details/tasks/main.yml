@@ -1,0 +1,14 @@
+---
+- name: Delete file
+  file:
+    dest: "/tmp/OS.csv"
+    state: absent
+  delegate_to: localhost
+
+- name: Create a file
+  file:
+    dest: "/tmp/OS.csv"
+    state: touch
+  delegate_to: localhost
+
+- include: fetch.yml
